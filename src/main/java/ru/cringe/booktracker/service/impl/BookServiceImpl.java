@@ -23,56 +23,56 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
-    private final BookRepository bookRepository;
+  private final BookRepository bookRepository;
 
-    private final UserService userService;
-    private final BookTemplateService bookTemplateService;
+  private final UserService userService;
+  private final BookTemplateService bookTemplateService;
 
-    @Override
-    @Transactional(readOnly = true)
-    @Cacheable(value = "BookService::getById", key = "#id")
-    public Book getById(Long id) {
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-    }
+  @Override
+  @Transactional(readOnly = true)
+  @Cacheable(value = "BookService::getById", key = "#id")
+  public Book getById(Long id) {
+    return bookRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+  }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Book> getAllByUserId(Long id) {
-        return bookRepository.findAllByUserId(id);
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public List<Book> getAllByUserId(Long id) {
+    return bookRepository.findAllByUserId(id);
+  }
 
-    @Override
-    @Transactional
-    @CachePut(value = "BookService::getById", key = "#book.id")
-    public Book update(Book book) {
-        bookRepository.save(book);
-        return book;
-    }
+  @Override
+  @Transactional
+  @CachePut(value = "BookService::getById", key = "#book.id")
+  public Book update(Book book) {
+    bookRepository.save(book);
+    return book;
+  }
 
-    @Override
-    @Transactional
-    @Cacheable(value = "BookService::getById", key = "#book.id")
-    public Book create(Book book, Long userId) {
-        User user = userService.getById(userId);
-        book.setStatus(Status.PLANNED);
-        book.setStartTime(LocalDateTime.now());
-        book.setCurrentPage(0);
-        if (bookTemplateService.isNew(book.getBookTemplate())) {
-            book.setBookTemplate(bookTemplateService.create(book.getBookTemplate()));
-        }
-        bookRepository.save(book);
+  @Override
+  @Transactional
+  @Cacheable(value = "BookService::getById",
+      condition = "#book.id!=null",
+      key = "#book.id")
+  public Book create(Book book, Long userId) {
+    User user = userService.getById(userId);
+    book.setStatus(Status.PLANNED);
+    book.setStartTime(LocalDateTime.now());
+    book.setBookTemplate(bookTemplateService.getById(book.getBookTemplate().getId()));
+    book.setCurrentPage(0);
+    bookRepository.save(book);
 
-        user.getBooks().add(book);
-        userService.update(user);
+    user.getBooks().add(book);
+    userService.update(user);
 
-        return book;
-    }
+    return book;
+  }
 
-    @Override
-    @Transactional
-    @CacheEvict(value = "BookService::getById", key = "#id")
-    public void delete(Long id) {
-        bookRepository.deleteById(id);
-    }
+  @Override
+  @Transactional
+  @CacheEvict(value = "BookService::getById", key = "#id")
+  public void delete(Long id) {
+    bookRepository.deleteById(id);
+  }
 }

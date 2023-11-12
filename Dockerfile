@@ -9,4 +9,4 @@ WORKDIR /
 COPY /src /src
 COPY --from=build /target/*.jar application.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "spring-boot-docker.jar"]
+ENTRYPOINT ["java", "-jar", "application.jar"]

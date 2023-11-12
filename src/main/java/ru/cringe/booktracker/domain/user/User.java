@@ -19,12 +19,12 @@ public class User implements Serializable {
     private String username;
     private String password;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_books", inverseJoinColumns = @JoinColumn(name = "book_id"))
     private List<Book> books;
 
     @Column(name = "role")
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "users_roles")
     @Enumerated(value = EnumType.STRING)
     private Set<Role> roles;

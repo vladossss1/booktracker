@@ -1,11 +1,15 @@
 package ru.cringe.booktracker.domain.booktemplate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ru.cringe.booktracker.domain.author.Author;
 
 import java.io.Serializable;
 import java.util.List;
+import ru.cringe.booktracker.domain.book.Book;
 
 @Entity
 @Table(name = "book_templates")

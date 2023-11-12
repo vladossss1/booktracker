@@ -7,11 +7,5 @@ import ru.cringe.booktracker.web.dto.author.AuthorDto;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface AuthorMapper {
-
-    AuthorDto toDto(Author author);
-
-    List<AuthorDto> toDto(List<Author> authors);
-
-    Author toEntity(AuthorDto dto);
+public interface AuthorMapper extends Mappable<Author, AuthorDto> {
 }
