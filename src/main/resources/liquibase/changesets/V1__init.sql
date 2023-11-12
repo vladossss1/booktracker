@@ -5,6 +5,12 @@ create table if not exists users
     password varchar(255) not null
 );
 
+create table if not exists book_templates
+(
+    id    bigserial primary key,
+    title varchar(255) not null
+);
+
 create table if not exists books
 (
     id           bigserial primary key,
@@ -14,14 +20,11 @@ create table if not exists books
     current_page integer       not null,
     start_time   timestamp     null,
     finish_time  timestamp     null,
-    comment      varchar(1024) null
+    comment      varchar(1024) null,
+    book_template_id bigint not null,
+    constraint fk_book_template foreign key (book_template_id) references book_templates (id) on delete cascade on update no action
 );
 
-create table if not exists book_templates
-(
-    id    bigserial primary key,
-    title varchar(255) not null
-);
 
 create table if not exists authors
 (
@@ -36,15 +39,6 @@ create table if not exists users_books
     primary key (user_id, book_id),
     constraint fk_users_books_users foreign key (user_id) references users (id) on delete cascade on update no action,
     constraint fk_users_books_books foreign key (book_id) references books (id) on delete cascade on update no action
-);
-
-create table if not exists books_book_templates
-(
-    book_id          bigint not null,
-    book_template_id bigint not null,
-    primary key (book_id, book_template_id),
-    constraint fk_books_book_templates_books foreign key (book_id) references books (id) on delete cascade on update no action,
-    constraint fk_books_book_templates_book_templates foreign key (book_template_id) references book_templates (id) on delete cascade on update no action
 );
 
 create table if not exists book_templates_authors

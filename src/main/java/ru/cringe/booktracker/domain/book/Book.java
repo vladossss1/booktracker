@@ -16,10 +16,8 @@ public class Book implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinTable(name = "books_book_templates",
-            joinColumns = {@JoinColumn(name = "book_template_id")},
-            inverseJoinColumns = {@JoinColumn(name = "book_id")})
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "book_template_id", referencedColumnName = "id")
     private BookTemplate bookTemplate;
 
     @Enumerated(value = EnumType.STRING)

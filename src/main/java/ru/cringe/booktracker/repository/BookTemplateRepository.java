@@ -12,9 +12,9 @@ public interface BookTemplateRepository extends JpaRepository<BookTemplate, Long
     @Query(value = """
             SELECT * FROM book_templates b
             JOIN book_templates_authors ba ON ba.book_template_id = b.id
-            WHERE b.title = :title AND ba.author IN :authors
+            WHERE b.title = :title AND ba.author_id IN :authorIds
             """, nativeQuery = true)
-    BookTemplate findByTitleAndAuthors(String title, List<Author> authors);
+    List<BookTemplate> findAllByTitleAndAuthors(String title, List<Long> authorIds);
     List<BookTemplate> findAllByTitle(String title);
 
     // List<BookTemplate> findAllByAuthors(List<String> authors);

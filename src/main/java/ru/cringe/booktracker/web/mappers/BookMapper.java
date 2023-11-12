@@ -7,11 +7,5 @@ import ru.cringe.booktracker.web.dto.book.BookDto;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface BookMapper {
-
-    BookDto toDto(Book book);
-
-    List<BookDto> toDto(List<Book> books);
-
-    Book toEntity(BookDto dto);
+public interface BookMapper extends Mappable<Book, BookDto> {
 }
