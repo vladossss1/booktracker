@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: database_url?currentSchema=booktracker
+    username: db_username
+    password: db_password
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:liquibase/db.changelog.yaml
+    enabled: true
+    default-schema: booktracker
+security:
+  jwt:
+    secret: encode big string https://www.base64encode.net/ and paste here
+    access: 3600000
+    refresh: 2592000000
+springdoc:
+  override-with-generic-response: false
