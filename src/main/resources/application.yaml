@@ -6,13 +6,13 @@ spring:
     cache-names: redis-cache
   data:
     redis:
-      host: ${REDIS_HOST}
+      host: ${REDISHOST}
       port: 6379
-      password: ${REDIS_PASSWORD}
+      password: ${REDISPASSWORD}
   datasource:
-    url: jdbc:postgresql://${HOST}:5432/${POSTGRES_DATABASE}?currentSchema=${POSTGRES_SCHEMA}
-    username: ${POSTGRES_USERNAME}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://${HOST}:5432/${POSTGRESDATABASE}?currentSchema=${POSTGRESSCHEMA}
+    username: ${POSTGRESUSERNAME}
+    password: ${POSTGRESPASSWORD}
     driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: classpath:liquibase/db.changelog.yaml
@@ -20,7 +20,7 @@ spring:
     default-schema: booktracker
 security:
   jwt:
-    secret: ${JWT_SECRET}
+    secret: ${JWTSECRET}
     access: 1
     refresh: 30
 springdoc:
