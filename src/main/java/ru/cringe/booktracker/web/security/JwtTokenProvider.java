@@ -19,6 +19,8 @@ import ru.cringe.booktracker.service.props.JwtProperties;
 import ru.cringe.booktracker.web.dto.auth.JwtResponse;
 
 import javax.crypto.SecretKey;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -40,12 +42,11 @@ public class JwtTokenProvider {
     }
 
     public String createAccessToken(Long userId, String username, Set<Role> roles) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtProperties.getAccess());
+        Instant validity = Instant.now()
+                .plus(jwtProperties.getAccess(), ChronoUnit.HOURS);
         return Jwts.builder().claims()
                 .subject(username)
-                .issuedAt(now)
-                .expiration(validity)
+                .expiration(Date.from(validity))
                 .add("id", userId)
                 .add("roles", resolveRoles(roles))
                 .and()
@@ -54,12 +55,11 @@ public class JwtTokenProvider {
     }
 
     public String createRefreshToken(Long userId, String username) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtProperties.getRefresh());
+        Instant validity = Instant.now()
+                .plus(jwtProperties.getRefresh(), ChronoUnit.DAYS);
         return Jwts.builder().claims()
                 .subject(username)
-                .issuedAt(now)
-                .expiration(validity)
+                .expiration(Date.from(validity))
                 .add("id", userId)
                 .and()
                 .signWith(key)

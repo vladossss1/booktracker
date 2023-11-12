@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import ru.cringe.booktracker.domain.author.Author;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "book_templates")
 @Data
-public class BookTemplate {
+public class BookTemplate implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

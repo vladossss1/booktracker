@@ -26,7 +26,7 @@ public class BookTemplateController {
     @PreAuthorize("isAdmin")
     public BookTemplateDto update(@Validated(OnUpdate.class) @RequestBody BookTemplateDto dto) {
         BookTemplate bookTemplate = bookTemplateMapper.toEntity(dto);
-        BookTemplate updatedbookTemplate = bookTemplateService.update(bookTemplate);
+        BookTemplate updatedbookTemplate = bookTemplateService.create(bookTemplate);
         return bookTemplateMapper.toDto(updatedbookTemplate);
     }
 

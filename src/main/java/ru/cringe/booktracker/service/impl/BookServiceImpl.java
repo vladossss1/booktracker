@@ -2,6 +2,9 @@ package ru.cringe.booktracker.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.cringe.booktracker.domain.book.Book;
@@ -27,6 +30,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "BookService::getById", key = "#id")
     public Book getById(Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
@@ -40,6 +44,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
+    @CachePut(value = "BookService::getById", key = "#book.id")
     public Book update(Book book) {
         bookRepository.save(book);
         return book;
@@ -47,20 +52,26 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
+    @Cacheable(value = "BookService::getById", key = "#book.id")
     public Book create(Book book, Long userId) {
         User user = userService.getById(userId);
         book.setStatus(Status.PLANNED);
         book.setStartTime(LocalDateTime.now());
-        book.setBookTemplate(bookTemplateService.update(book.getBookTemplate()));
         book.setCurrentPage(0);
+        if (bookTemplateService.isNew(book.getBookTemplate())) {
+            book.setBookTemplate(bookTemplateService.create(book.getBookTemplate()));
+        }
         bookRepository.save(book);
+
         user.getBooks().add(book);
         userService.update(user);
+
         return book;
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "BookService::getById", key = "#id")
     public void delete(Long id) {
         bookRepository.deleteById(id);
     }

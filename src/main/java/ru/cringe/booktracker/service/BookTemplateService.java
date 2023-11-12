@@ -15,7 +15,9 @@ public interface BookTemplateService {
 
     List<BookTemplate> getAllByGenres(List<Genre> genres);
 
-    BookTemplate update(BookTemplate bookTemplate);
+    BookTemplate create(BookTemplate bookTemplate);
 
     void delete(Long id);
+
+    boolean isNew(BookTemplate bookTemplate);
 }
