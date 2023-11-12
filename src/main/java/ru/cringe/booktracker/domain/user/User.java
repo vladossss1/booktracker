@@ -22,6 +22,7 @@ public class User {
     @JoinTable(name = "users_books", inverseJoinColumns = @JoinColumn(name = "book_id"))
     private List<Book> books;
 
+    @Column(name = "role")
     @ElementCollection
     @CollectionTable(name = "users_roles")
     @Enumerated(value = EnumType.STRING)
